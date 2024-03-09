@@ -1,34 +1,44 @@
-import { Model,DataTypes } from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import { sequelize } from "./database.mjs";
 
 
 
-export class Club extends Model{static associate(models){
-    this.hasMany(Player);
-}}
-Club.init({
-
-    name:DataTypes.STRING,
-    coach:DataTypes.STRING
-},{sequelize,modelName:"club"});
-
-
-
-
-export class Player extends Model{static associate(models){
-    this.belongsTo(Club,{as:"club"});
-}}
-Player.init ({
-  
-  name:DataTypes.STRING,
-  clubId:{
-    type:DataTypes.INTEGER,
-    references:{
-        model:"club",
-        key:"id",
+// FOR CLUB
+export class Club extends Model {
+  static associate(models) {
+      this.hasMany(models.Player, { foreignKey: 'clubId' }); 
     }
-  }
 }
-   
-, {sequelize,modelName:"player"})
+Club.init(
+  {
+    name: DataTypes.STRING,
+    coach: DataTypes.STRING,
+  },
+  { sequelize, modelName: "club" }
+);
+
+
+// FOR PLAYeRS
+export class Player extends Model {
+  static associate(models) {
+      this.belongsTo(models.Club, { foreignKey: 'clubId', as: "club" });
+    }
+}
+Player.init(
+  {
+    name: DataTypes.STRING,
+    clubId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "club",
+        key: "id",
+      },
+    },
+  },
+  { sequelize, modelName: "player" }
+);
+
+//Bi-directional associations. CHECK README
+Club.hasMany(Player, { foreignKey: 'clubId' });
+Player.belongsTo(Club, { foreignKey: 'clubId', as: "club" });
 

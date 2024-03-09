@@ -1,37 +1,37 @@
-import Express from "express"
-import { sequelize } from "./database.mjs"
-import { getAllPlayers,getOnePlayer,addOnePlayer, updatePlayer, deletePlayer} from "./controllers/playerControllers.mjs"
-import { createOneClub, getAllClubs, getOneClub } from "./controllers/clubscontrollers.mjs"
-// import { Club,Player } from "./models.mjs"
+import Express from "express";
+import { sequelize } from "./database.mjs";
+import {getAllPlayers,getOnePlayer,addOnePlayer,updatePlayer,deletePlayer} from "./controllers/playerControllers.mjs";
+import {createOneClub,getAllClubs,getOneClub} from "./controllers/clubscontrollers.mjs";
 
-const app = Express()
-const port = 2006
+const app = Express();
+const port = 2006;
 
-app.use(Express.json())
+app.use(Express.json());
 
-// Club.hasMany(Player,{foreignKey:'clubid'});
-// Player.belongsTo(Club)
+// CREATE CLUBS
+app.post('/clubs', createOneClub);
 
-app.get('/players',getAllPlayers)
+app.get('/clubs', getAllClubs);
 
-app.get('/players/:id',getOnePlayer)
+app.get('/clubs/:id', getOneClub);
 
-app.post('/players',addOnePlayer)
+// GET A ONE PLAYER
+app.get('/players/:id', getOnePlayer);
 
-app.put('/players/:id',updatePlayer)
+// ADD ONE PLAYER
+app.post('/players', addOnePlayer);
 
-app.delete('/players/:id',deletePlayer)
+// GET ALL PLAYERS
+app.get('/players', getAllPlayers);
 
-app.get('/clubs',getAllClubs)
+// UPDATE A PLAYER
+app.put('/players/:id', updatePlayer);
 
-app.get('/clubs/:id',getOneClub)
+// DELETE A PLAYER
+app.delete('/players/:id', deletePlayer);
 
-app.post('/clubs',createOneClub)
-
-
-app.listen(port,()=>{
-    console.log(`app is running on port ${port}`)
-    console.log('syncing database')
-    sequelize.sync()
-})
-
+app.listen(port, () => {
+  console.log(`App is running on port ${port}`);
+  console.log('Syncing database');
+  sequelize.sync();
+});
